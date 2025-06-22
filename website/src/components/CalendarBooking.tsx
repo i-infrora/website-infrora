@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, User, Mail, Phone, MessageSquare, CheckCircle } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 const CalendarBooking: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -13,6 +14,8 @@ const CalendarBooking: React.FC = () => {
     consultationType: 'general'
   });
   const [isBooked, setIsBooked] = useState(false);
+  const [error, setError] = useState('');
+  const [sending, setSending] = useState(false);
 
   // Generate next 30 days
   const generateDates = () => {
@@ -39,26 +42,64 @@ const CalendarBooking: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleBooking = (e: React.FormEvent) => {
+  // EmailJS booking handler
+  const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would integrate with your calendar API
-    console.log('Booking:', { ...formData, date: selectedDate, time: selectedTime });
-    setIsBooked(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsBooked(false);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        message: '',
-        consultationType: 'general'
-      });
-      setSelectedDate('');
-      setSelectedTime('');
-    }, 3000);
+    setSending(true);
+    setError('');
+    // EmailJS config
+    const SERVICE_ID = 'service_41ue4m6';
+    const TEMPLATE_ID = 'template_lplrcni';
+    const PUBLIC_KEY = 'I_gQbJ1ZH-jgXZZcg';
+
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: `
+Name: ${formData.name}
+
+Email: ${formData.email}
+
+Company: ${formData.company}
+
+Subject: Consultation Booking
+
+Message:
+${formData.message}
+
+Phone: ${formData.phone}
+Company: ${formData.company}
+Consultation Type: ${formData.consultationType}
+Date: ${selectedDate}
+Time: ${selectedTime}
+          `
+        },
+        PUBLIC_KEY
+      );
+      setIsBooked(true);
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setIsBooked(false);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          company: '',
+          message: '',
+          consultationType: 'general'
+        });
+        setSelectedDate('');
+        setSelectedTime('');
+      }, 3000);
+    } catch (err) {
+      setError('Failed to book consultation. Please try again later.');
+    } finally {
+      setSending(false);
+    }
   };
 
   if (isBooked) {
@@ -250,13 +291,31 @@ const CalendarBooking: React.FC = () => {
           />
         </div>
 
+        {error && (
+          <div className="text-red-500 text-sm mt-4">
+            {error}
+          </div>
+        )}
+
         <button
           type="submit"
-          disabled={!selectedDate || !selectedTime || !formData.name || !formData.email}
+          disabled={!selectedDate || !selectedTime || !formData.name || !formData.email || sending}
           className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-8 py-5 rounded-xl font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-cyan-500/25"
         >
-          <Calendar size={22} />
-          Book Free Consultation
+          {sending ? (
+            <>
+              <svg className="animate-spin h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+              </svg>
+              Sending...
+            </>
+          ) : (
+            <>
+              <Calendar size={22} />
+              Book Free Consultation
+            </>
+          )}
         </button>
       </form>
     </div>

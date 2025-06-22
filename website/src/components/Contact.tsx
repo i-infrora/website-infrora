@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Clock, Send, Calendar, Instagram, Sparkles } from 'lucide-react';
 import CalendarBooking from './CalendarBooking';
+import emailjs from '@emailjs/browser';
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,9 @@ const Contact: React.FC = () => {
     consultationType: 'general'
   });
   const [showCalendar, setShowCalendar] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -21,39 +25,45 @@ const Contact: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    
-    // Create mailto link with company name
-    const subject = encodeURIComponent(`${formData.subject} - ${formData.company || 'New Inquiry'}`);
-    const body = encodeURIComponent(`
-Hello INFRAORA Team,
+    setSending(true);
+    setError('');
+    setSent(false);
 
-Name: ${formData.name}
-Company: ${formData.company || 'Not specified'}
-Email: ${formData.email}
-Consultation Type: ${formData.consultationType}
+    // Replace with your EmailJS service, template, and public key
+    const SERVICE_ID = 'service_41ue4m6';
+    const TEMPLATE_ID = 'template_lplrcni';
+    const PUBLIC_KEY = 'I_gQbJ1ZH-jgXZZcg';
 
-Project Details:
-${formData.message}
-
-Best regards,
-${formData.name}
-    `);
-    
-    window.location.href = `mailto:iinfrora@gmail.com?subject=${subject}&body=${body}`;
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      company: '',
-      subject: '',
-      message: '',
-      consultationType: 'general'
-    });
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          subject: formData.subject,
+          message: formData.message,
+          consultationType: formData.consultationType,
+        },
+        PUBLIC_KEY
+      );
+      setSent(true);
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        subject: '',
+        message: '',
+        consultationType: 'general'
+      });
+    } catch (err) {
+      setError('Failed to send message. Please try again later.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -134,7 +144,7 @@ ${formData.name}
                     <Instagram className="text-white" size={22} />
                   </div>
                   <div>
-                    <h4 className="text-white font-semibold mb-2 group-hover/item:text-cyan-400 transition-colors duration-300">Follow INFRAORA</h4>
+                    <h4 className="text-white font-semibold mb-2 group-hover:item:text-cyan-400 transition-colors duration-300">Follow INFRAORA</h4>
                     <a 
                       href="https://www.instagram.com/infro_ra/profilecard/?igsh=M2k5NDM2cDR6cXFi" 
                       target="_blank" 
@@ -151,7 +161,7 @@ ${formData.name}
                     <Clock className="text-white" size={22} />
                   </div>
                   <div>
-                    <h4 className="text-white font-semibold mb-2 group-hover/item:text-cyan-400 transition-colors duration-300">Business Hours</h4>
+                    <h4 className="text-white font-semibold mb-2 group-hover:item:text-cyan-400 transition-colors duration-300">Business Hours</h4>
                     <p className="text-gray-300 text-lg mb-1">Monday - Friday: 9:00 AM - 6:00 PM</p>
                     <p className="text-gray-300 text-lg">Saturday: 10:00 AM - 4:00 PM</p>
                   </div>
@@ -270,11 +280,22 @@ ${formData.name}
                     ></textarea>
                   </div>
 
+                  {sent && (
+                    <div className="text-green-400 font-semibold text-center mb-4">
+                      Message sent successfully!
+                    </div>
+                  )}
+                  {error && (
+                    <div className="text-red-400 font-semibold text-center mb-4">
+                      {error}
+                    </div>
+                  )}
+
                   <button
                     type="submit"
                     className="group/btn w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-8 py-5 rounded-xl font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-cyan-500/25"
                   >
-                    Send Message to INFRAORA
+                    {sending ? 'Sending...' : 'Send Message to INFRAORA'}
                     <Send size={22} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform duration-300" />
                   </button>
                 </form>
