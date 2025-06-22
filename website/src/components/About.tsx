@@ -60,10 +60,8 @@ const About: React.FC = () => {
               <h3 className="text-2xl font-bold text-white">Our Mission</h3>
             </div>
             <p className="text-gray-300 text-lg leading-relaxed">
-              To build strong, smart, and scalable foundations that empower innovators, 
-              creators, and businesses to rise beyond limits. We believe in creating 
-              digital solutions that don't just meet today's needs, but anticipate 
-              tomorrow's challenges.
+              Empowering innovation through strong foundations - we build robust, scalable solutions 
+                that serve as the bedrock for transformative digital experiences.
             </p>
           </motion.div>
 
@@ -80,9 +78,8 @@ const About: React.FC = () => {
               <h3 className="text-2xl font-bold text-white">Our Vision</h3>
             </div>
             <p className="text-gray-300 text-lg leading-relaxed">
-              To be the guiding light of digital evolution — where every breakthrough 
-              begins with a strong foundation. We envision a future where technology 
-              seamlessly integrates with human creativity to unlock unlimited potential.
+              A future built on brilliance - we envision a world where technology seamlessly 
+                integrates with human potential to create extraordinary possibilities.
             </p>
           </motion.div>
         </motion.div>
