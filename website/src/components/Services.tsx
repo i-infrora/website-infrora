@@ -77,7 +77,7 @@ const Services: React.FC = () => {
           <h2 className="text-5xl lg:text-6xl font-bold text-white mb-6">
             Choose Smart. Build Fast.
             <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              INFRAORA's Services
+              INFRORA's Services
             </span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
