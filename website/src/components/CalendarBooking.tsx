@@ -47,10 +47,17 @@ const CalendarBooking: React.FC = () => {
     e.preventDefault();
     setSending(true);
     setError('');
-    // EmailJS config
-    const SERVICE_ID = 'service_41ue4m6';
-    const TEMPLATE_ID = 'template_lplrcni';
-    const PUBLIC_KEY = 'I_gQbJ1ZH-jgXZZcg';
+    const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
+    const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE1_ID || '';
+    const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
+    
+    // Add validation to ensure env vars are set
+    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+      console.error('EmailJS environment variables not set');
+      setError('Configuration error. Please contact support.');
+      setSending(false);
+      return;
+    }
 
     try {
       await emailjs.send(

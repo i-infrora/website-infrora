@@ -31,10 +31,9 @@ const Contact: React.FC = () => {
     setError('');
     setSent(false);
 
-    // Replace with your EmailJS service, template, and public key
-    const SERVICE_ID = 'service_41ue4m6';
-    const TEMPLATE_ID = 'template_lplrcni';
-    const PUBLIC_KEY = 'I_gQbJ1ZH-jgXZZcg';
+    const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
+    const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE2_ID || '';
+    const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
 
     try {
       await emailjs.send(
@@ -131,7 +130,7 @@ const Contact: React.FC = () => {
                     <Mail className="text-white" size={22} />
                   </div>
                   <div>
-                    <h4 className="text-white font-semibold mb-2 group-hover/item:text-cyan-400 transition-colors duration-300">Email INFRAORA</h4>
+                    <h4 className="text-white font-semibold mb-2 group-hover:item:text-cyan-400 transition-colors duration-300">Email INFRAORA</h4>
                     <a href="mailto:iinfrora@gmail.com" className="text-cyan-300 text-lg mb-1 hover:text-cyan-200 transition-colors duration-300">
                       iinfrora@gmail.com
                     </a>
