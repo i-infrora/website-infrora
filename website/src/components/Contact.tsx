@@ -94,28 +94,29 @@ const Contact: React.FC = () => {
 
         {/* Toggle Buttons */}
         <div className="flex justify-center mb-12">
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-2 border border-slate-700/50">
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-2 border border-slate-700/50 flex flex-col sm:flex-row gap-2 sm:gap-0 items-center">
             <button
               onClick={() => setShowCalendar(false)}
-              className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                !showCalendar
-                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg'
-                  : 'text-gray-300 hover:text-white'
+              className={`w-full sm:w-auto px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
+          !showCalendar
+            ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg'
+            : 'text-gray-300 hover:text-white'
               }`}
             >
               Send Message
             </button>
             <button
               onClick={() => setShowCalendar(true)}
-              className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                showCalendar
-                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg'
-                  : 'text-gray-300 hover:text-white'
+              className={`w-full sm:w-auto px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
+          showCalendar
+            ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg'
+            : 'text-gray-300 hover:text-white'
               }`}
             >
               Schedule Meeting
             </button>
           </div>
+        </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -301,7 +302,6 @@ const Contact: React.FC = () => {
               </div>
             )}
           </div>
-        </div>
       </div>
     </section>
   );
